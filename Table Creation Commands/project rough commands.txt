@@ -1,0 +1,32 @@
+select A.batsman, min(A.strikerate) from most_runs_average_strikerate A, players_ipl B, deliveries C where A.batsman = B.player_name and B.player_name = C.bowler and C.bowling_team='Sunrisers Hyderabad' and B.bowling_skill like 'Right%' group by A.batsman);
+
+select min(A.strikerate) as min_strike_rate from most_runs_average_strikerate A, players_ipl B, deliveries C where
+A.batsman = B.player_name and B.player_name = C.bowler and C.bowling_team='Sunrisers Hyderabad' and B.bowling_skill like 'Right%';
+
+select batsman, min_strike_rate from question19 
+where min_strike_rate = (select min(A.strikerate) 
+as min_strike_rate from most_runs_average_strikerate A, players_ipl B, deliveries C 
+where A.batsman = B.player_name and B.player_name = C.bowler 
+and C.bowling_team='Sunrisers Hyderabad' and B.bowling_skill like 'Right%');
+
+select X.batsman, X.min_strike_rate from 
+(select A.batsman, min(A.strikerate) as
+min_strike_rate from most_runs_average_strikerate A, 
+players_ipl B, deliveries C where
+A.batsman = B.player_name
+and B.player_name = C.bowler and 
+C.bowling_team='Sunrisers Hyderabad' and 
+B.bowling_skill like 'Right%' group by A.batsman
+)X 
+where X.min_strike_rate = 
+(select min(A.strikerate) as min_strike_rate from most_runs_average_strikerate A, 
+players_ipl B, deliveries C where A.batsman = B.player_name and B.player_name = C.bowler 
+and C.bowling_team='Sunrisers Hyderabad' and B.bowling_skill like 'Right%');
+
+select A.player_name, B.average, A.batting_hand from
+players_ipl A, most_runs_average_strikerate B,
+deliveries C, matches D where
+C.match_id = D.id and A.player_name = B.batsman
+and C.batsman = B.batsman and C.bowler='TS Mills'
+and C.dismissal_kind='bowled' and
+D.season in ('IPL-2014','IPL-2015','IPL-2016','IPL-2017','IPL-2018','IPL-2019');
